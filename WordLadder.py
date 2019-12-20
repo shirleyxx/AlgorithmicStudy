@@ -4,24 +4,22 @@ class Solution:
             return 0
         l = len(beginWord)
         change_map = {}
-        words = wordList
+        if beginWord in wordList:
+            wordList.remove(beginWord)
 
-        for w in words:
+        for w in wordList:
             for i in range(l):
                 try:
                     change_map[w[:i] + "*" + w[i+1:]].add(w) 
                 except:
                     change_map[w[:i] + "*" + w[i+1:]] = {w}
                     
-        for t in change_map.values():
-            t = list(t)
-            
         queue = [beginWord] 
-        visited = dict.fromkeys(words+[beginWord], 1)
+        visited = dict.fromkeys(wordList, 0)
+        visited[beginWord] = 1
 
         while queue:
             w_cur = queue.pop(0)
-           
             for i in range(l):
                 w = w_cur[:i] + "*" + w_cur[i+1:]
                 if w in change_map:
@@ -29,7 +27,7 @@ class Solution:
                             if w_next == endWord:
                                 visited[w_next] = visited[w_cur] + 1
                                 return visited[endWord]
-                            if visited[w_next] == 1 and w_next != beginWord:
+                            if visited[w_next] == 0:
                                 visited[w_next] = visited[w_cur] + 1
                                 queue.append(w_next)
 
